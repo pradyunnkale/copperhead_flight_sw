@@ -66,6 +66,7 @@ else()
     add_subdirectory(simulations)
 endif()
 
+# Do something so that the user knows they need openocd installed
 find_program(OPENOCD openocd)
 if(OPENOCD)
     add_custom_target(flash
@@ -73,4 +74,7 @@ if(OPENOCD)
         DEPENDS example 
         COMMENT "Flashing target hardware"
     )
+else()
+    message(WARNING "OpenOCD not found! Install OpenOCD to use 'flash' target.")
+
 endif()
