@@ -1,12 +1,31 @@
+#include <stdint.h>
+#include <stdio.h>
+
+
+// Since we are going to use the same API no matter the target, we just need to differentiate includes?
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "stm32h7xx_hal.h"
 #include "task.h"
-#include <stdint.h>
-#include <stdio.h>
 
+void vBlinkInitTask(void *pvParameters);
 void vBlinkTask1(void *pvParameters);
+
 int main()
+{
+    xTaskCreate(vBlinkInitTask, "InitBlink", 256, NULL, 10, NULL);
+
+    xTaskCreate(vBlinkTask1, "Blink", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
+
+    vTaskStartScheduler();
+
+    // Should never reach here
+    for (;;)
+    {
+    }
+}
+
+void vBlinkInitTask(void *pvParameters)
 {
     HAL_Init();
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -18,15 +37,7 @@ int main()
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    xTaskCreate(vBlinkTask1, "Blink", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
-
-    vTaskStartScheduler();
-
-    // Should never reach here
-    for (;;)
-    {
-    }
+    vTaskDelete(NULL);
 }
 
 void vBlinkTask1(void *pvParameters)

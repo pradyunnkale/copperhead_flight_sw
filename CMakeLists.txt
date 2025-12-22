@@ -15,6 +15,7 @@ if ("${TARGET}" STREQUAL "STM32H753")
     set(MCU_MODEL STM32H753ZI)
 endif()
 
+
 if("${TARGET}" STREQUAL "Native")
     set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -x assembler-with-cpp -MMD -MP")
     set(CMAKE_C_FLAGS 
